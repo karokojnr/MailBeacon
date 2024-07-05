@@ -1,14 +1,8 @@
-# MailBeacon
+# MailBeacon ![Static Badge](https://img.shields.io/badge/workinprogress-%F0%9F%9A%A7-brightgreen)
 
 A Newsletter service using GO and Google Pub/Sub.
 
 ![alt text](/mailbeacon.png)
-
-</br>
-<h2 align="center">
-🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧 WORK IN PROGRESS 🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧
-</h2>
-</br>
 
 ## Getting Started
 
