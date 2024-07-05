@@ -1,4 +1,4 @@
-# Project MailBeacon
+# MailBeacon
 
 A Newsletter service using GO and Google Pub/Sub.
 
