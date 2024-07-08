@@ -15,8 +15,16 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.Use(middleware.Logger)
 
 	r.Get("/", s.HelloWorldHandler)
-
 	r.Get("/health", s.healthHandler)
+
+	newsletterRouter := chi.NewRouter()
+	newsletterRouter.Post("/signup", s.NewsletterSignup)
+	newsletterRouter.Post("/confirm-email", s.ConfirmNewsletterSignup)
+	
+	newsletterRouter.Post("/send-confirmation-email", s.SendConfirmationEmail)
+	newsletterRouter.Post("/send-welcome-email", s.SendWelcomeEmail)
+
+	r.Mount("/api/newsletter", newsletterRouter)
 
 	fileServer := http.FileServer(http.FS(web.Files))
 	r.Handle("/assets/*", fileServer)
