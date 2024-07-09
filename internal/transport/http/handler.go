@@ -1,7 +1,8 @@
 package http
 
 import (
-	"MailBeacon/internal/util"
+	"MailBeacon/internal/newsletter"
+	"MailBeacon/internal/utils"
 	"context"
 	"log"
 	"net/http"
@@ -16,12 +17,15 @@ import (
 )
 
 type Handler struct {
-	Router *chi.Mux
-	Server *http.Server
+	Router  *chi.Mux
+	Server  *http.Server
+	Service newsletter.NewsletterSevice
 }
 
-func NewHandler() *Handler {
-	h := &Handler{}
+func NewHandler(service newsletter.NewsletterSevice) *Handler {
+	h := &Handler{
+		Service: service,
+	}
 	h.Router = chi.NewRouter()
 	h.Router.Use(middleware.Logger)
 
@@ -41,7 +45,7 @@ func NewHandler() *Handler {
 func (h *Handler) SetupRoutes() {
 	apiRouter := chi.NewRouter()
 	apiRouter.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		util.WriteJson(w, http.StatusOK, map[string]string{"status": "ok"})
+		utils.WriteJson(w, http.StatusOK, map[string]string{"status": "ok"})
 	})
 
 	newsletterRouter := chi.NewRouter()
