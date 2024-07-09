@@ -1,25 +1,45 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"log"
+	"os"
 
 	"MailBeacon/internal/database"
 	"MailBeacon/internal/newsletter"
+	"MailBeacon/internal/pubsub"
 	transportHTTP "MailBeacon/internal/transport/http"
+
+	googlePubSub "cloud.google.com/go/pubsub"
+
+	_ "github.com/joho/godotenv/autoload"
+)
+
+var (
+	projectId = os.Getenv("GOOGLE_PROJECT_ID")
 )
 
 func Run() error {
-	fmt.Println("Starting server...")
 
 	db, err := database.NewDatabase()
 	if err != nil {
-		fmt.Println("Failed to connect to database")
+		log.Fatalf("Failed to create database: %v", err)
 	}
 
-	// todo: add more services here and add db to them
-	newsletterService := newsletter.NewNewsletterService(db)
+	client, err := googlePubSub.NewClient(context.Background(), projectId)
+	if err != nil {
+		log.Fatalf("Failed to create pubsub client: %v", err)
+	}
+	defer client.Close()
+
+	pSub := pubsub.NewGooglePubSub(client)
+
+	newsletterService := newsletter.NewNewsletterService(db, pSub)
 
 	httpHandler := transportHTTP.NewHandler(newsletterService)
+
+	log.Printf("Server is running on: %v", httpHandler.Server.Addr)
 	if err := httpHandler.Serve(); err != nil {
 		return err
 	}

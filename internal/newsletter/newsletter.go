@@ -2,6 +2,7 @@ package newsletter
 
 import (
 	"MailBeacon/internal/database"
+	"MailBeacon/internal/pubsub"
 	"MailBeacon/internal/types"
 	"context"
 )
@@ -11,15 +12,23 @@ type NewsletterSevice interface {
 }
 
 type newsletterService struct {
-	store database.NewsletterStore
+	store  database.NewsletterStore
+	pubSub pubsub.PubSub
 }
 
-func NewNewsletterService(store database.NewsletterStore) *newsletterService {
+func NewNewsletterService(store database.NewsletterStore, pubSub pubsub.PubSub) *newsletterService {
 	return &newsletterService{
-		store: store,
+		store:  store,
+		pubSub: pubSub,
 	}
 }
 
 func (n *newsletterService) SignUp(ctx context.Context, user types.User) error {
-	return n.store.AddUser(ctx, user)
+	// add user to database
+	err := n.store.AddUser(ctx, user)
+	if err != nil {
+		return err
+	}
+	// publish signup event
+	return nil
 }
