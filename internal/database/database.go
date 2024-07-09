@@ -12,13 +12,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type Service interface {
-	Health() map[string]string
-}
+// type Service interface {
+// 	Health() map[string]string
+// }
 
-type service struct {
-	db *mongo.Client
-}
+// type service struct {
+// 	db *mongo.Client
+// }
 
 var (
 	host = os.Getenv("DB_HOST")
@@ -26,23 +26,27 @@ var (
 	//database = os.Getenv("DB_DATABASE")
 )
 
-func New() Service {
-	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(fmt.Sprintf("mongodb://%s:%s", host, port)))
-
-	if err != nil {
-		log.Fatal(err)
-
-	}
-	return &service{
-		db: client,
-	}
+type Database struct {
+	db *mongo.Client
 }
 
-func (s *service) Health() map[string]string {
+func NewDatabase() (*Database, error) {
+	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(fmt.Sprintf("mongodb://%s:%s", host, port)))
+	if err != nil {
+		return &Database{}, fmt.Errorf("could not connect to the database: %w", err)
+	}
+
+	return &Database{
+		db: client,
+	}, nil
+
+}
+
+func (d *Database) DBHealth() map[string]string {
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 
-	err := s.db.Ping(ctx, nil)
+	err := d.db.Ping(ctx, nil)
 	if err != nil {
 		log.Fatalf(fmt.Sprintf("db down: %v", err))
 	}
@@ -51,3 +55,15 @@ func (s *service) Health() map[string]string {
 		"message": "It's healthy",
 	}
 }
+
+// func New() Service {
+// 	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(fmt.Sprintf("mongodb://%s:%s", host, port)))
+
+// 	if err != nil {
+// 		log.Fatal(err)
+
+// 	}
+// 	return &service{
+// 		db: client,
+// 	}
+// }
