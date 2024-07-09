@@ -1,15 +1,23 @@
 package main
 
 import (
-	"MailBeacon/internal/server"
 	"fmt"
+
+	transportHTTP "MailBeacon/internal/transport/http"
 )
 
-func main() {
-	server := server.NewServer()
+func Run() error {
+	fmt.Println("Starting server...")
+	// todo: set up db
+	httpHandler := transportHTTP.NewHandler()
+	if err := httpHandler.Serve(); err != nil {
+		return err
+	}
+	return nil
+}
 
-	err := server.ListenAndServe()
-	if err != nil {
-		panic(fmt.Sprintf("cannot start server: %s", err))
+func main() {
+	if err := Run(); err != nil {
+		fmt.Println(err)
 	}
 }
