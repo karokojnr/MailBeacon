@@ -3,7 +3,6 @@ package database
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 	"time"
 
@@ -42,18 +41,4 @@ func NewDatabase() (*Database, error) {
 		db: client,
 	}, nil
 
-}
-
-func (d *Database) DBHealth() map[string]string {
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
-	defer cancel()
-
-	err := d.db.Ping(ctx, nil)
-	if err != nil {
-		log.Fatalf(fmt.Sprintf("db down: %v", err))
-	}
-
-	return map[string]string{
-		"message": "It's healthy",
-	}
 }

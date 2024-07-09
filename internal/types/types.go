@@ -19,7 +19,7 @@ func ConvertSignUpRequestToUser(signUpRequest SignUpRequest) User {
 
 type User struct {
 	ID        primitive.ObjectID `bson:"_id,omitempty"`
-	Email     string             `bson:"email"`
+	Email     string             `bson:"email" validate:"required,email"`
 	Token     string             `bson:"token"`
 	Confirmed bool               `bson:"confirmed"`
 	Active    bool               `bson:"active"`
