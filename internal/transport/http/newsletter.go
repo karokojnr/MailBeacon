@@ -25,7 +25,7 @@ func (h *Handler) NewsletterSignup(w http.ResponseWriter, r *http.Request) {
 	user := types.ConvertSignUpRequestToUser(usrReq)
 	err := h.Service.SignUp(r.Context(), user)
 	if err != nil {
-		utils.WriteError(w, http.StatusInternalServerError, "Could not sign up user")
+		utils.WriteError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 	utils.WriteJson(w, http.StatusOK, map[string]string{"message": "ok!"})
