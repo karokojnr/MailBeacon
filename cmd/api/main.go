@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"MailBeacon/internal/database"
+	"MailBeacon/internal/mailer"
 	"MailBeacon/internal/newsletter"
 	"MailBeacon/internal/pubsub"
 	transportHTTP "MailBeacon/internal/transport/http"
@@ -17,32 +18,39 @@ import (
 )
 
 var (
-	projectId = os.Getenv("PROJECT_ID")
+	projectId      = os.Getenv("PROJECT_ID")
+	sendgridApiKey = os.Getenv("SENDGRID_API_KEY")
 )
 
 func Run() error {
 
+	// Create a new database connection
 	db, err := database.NewDatabase()
 	if err != nil {
 		log.Fatalf("Failed to create database: %v", err)
 	}
 
+	// Create a new pubsub client
 	client, err := googlePubSub.NewClient(context.Background(), projectId)
 	if err != nil {
 		log.Fatalf("Failed to create pubsub client: %v", err)
 	}
 	defer client.Close()
-
 	pSub := pubsub.NewGooglePubSub(client)
 
-	newsletterService := newsletter.NewNewsletterService(db, pSub)
+	// Create a new mailer client
+	sendgridClient := mailer.NewSendGrid()
 
+	// Create a new newsletter service
+	newsletterService := newsletter.NewNewsletterService(db, pSub, sendgridClient)
+
+	// Create a new http handler
 	httpHandler := transportHTTP.NewHandler(newsletterService)
-
 	log.Printf("Server is running on: %v", httpHandler.Server.Addr)
 	if err := httpHandler.Serve(); err != nil {
 		return err
 	}
+
 	return nil
 }
 

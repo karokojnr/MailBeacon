@@ -2,6 +2,7 @@ package newsletter
 
 import (
 	"MailBeacon/internal/database"
+	"MailBeacon/internal/mailer"
 	"MailBeacon/internal/pubsub"
 	"MailBeacon/internal/types"
 	"context"
@@ -14,12 +15,14 @@ type NewsletterSevice interface {
 type newsletterService struct {
 	store  database.NewsletterStore
 	pubSub pubsub.PubSub
+	mailer mailer.Mailer
 }
 
-func NewNewsletterService(store database.NewsletterStore, pubSub pubsub.PubSub) *newsletterService {
+func NewNewsletterService(store database.NewsletterStore, pubSub pubsub.PubSub, mailer mailer.Mailer) *newsletterService {
 	return &newsletterService{
 		store:  store,
 		pubSub: pubSub,
+		mailer: mailer,
 	}
 }
 
