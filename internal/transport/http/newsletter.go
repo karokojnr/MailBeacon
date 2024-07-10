@@ -47,6 +47,18 @@ func (h *Handler) ConfirmNewsletterSignup(w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	usr := types.User{
+		Email: email,
+		Token: token,
+	}
+
+	err := h.Service.ConfirmSubscription(r.Context(), usr)
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err.Error())
+		return
+
+	}
+
 	utils.WriteJson(w, http.StatusOK, map[string]string{"message": "Thank you for confirming your email address!"})
 }
 

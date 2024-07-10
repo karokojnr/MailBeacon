@@ -11,6 +11,7 @@ import (
 type NewsletterSevice interface {
 	SignUp(context.Context, types.User) error
 	SendConfirmationEmail(context.Context, types.User) error
+	ConfirmSubscription(context.Context, types.User) error
 }
 
 type newsletterService struct {
@@ -42,6 +43,19 @@ func (n *newsletterService) SignUp(ctx context.Context, user types.User) error {
 
 func (n *newsletterService) SendConfirmationEmail(ctx context.Context, user types.User) error {
 	err := n.mailer.SendConfirmationEmail(user.Email, user.Token)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (n *newsletterService) ConfirmSubscription(ctx context.Context, user types.User) error {
+	err := n.store.ConfirmUser(ctx, user)
+	if err != nil {
+		return err
+	}
+
+	err = n.pubSub.Publish("newsletter-confirmation", user)
 	if err != nil {
 		return err
 	}
