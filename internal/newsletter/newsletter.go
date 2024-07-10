@@ -36,5 +36,10 @@ func (n *newsletterService) SignUp(ctx context.Context, user types.User) error {
 	if err != nil {
 		return err
 	}
+
+	err = n.mailer.SendConfirmationEmail(user.Email, user.Token)
+	if err != nil {
+		return err
+	}
 	return nil
 }
