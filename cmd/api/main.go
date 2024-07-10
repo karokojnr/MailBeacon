@@ -17,7 +17,7 @@ import (
 )
 
 var (
-	projectId = os.Getenv("GOOGLE_PROJECT_ID")
+	projectId = os.Getenv("PROJECT_ID")
 )
 
 func Run() error {

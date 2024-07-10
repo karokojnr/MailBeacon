@@ -1,6 +1,7 @@
 package pubsub
 
 type PubSub interface {
-	Publish(topiciD string, payload any) string
-	Subscribe(topicId string, payload any) string
+	Publish(topicId string, payload any) error
+	// ValidatePayload(payload any) bool
+	// Subscribe(topicId string, payload any) string
 }

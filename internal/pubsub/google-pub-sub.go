@@ -1,7 +1,17 @@
 package pubsub
 
 import (
+	"context"
+	"encoding/json"
+	"os"
+
 	gPubsub "cloud.google.com/go/pubsub"
+	_ "github.com/joho/godotenv/autoload"
+)
+
+var (
+	projectId      = os.Getenv("PROJECT_ID")
+	developmentEnv = os.Getenv("DEVELOPMENT_ENV")
 )
 
 type googlePubSub struct {
@@ -14,10 +24,43 @@ func NewGooglePubSub(pSub *gPubsub.Client) *googlePubSub {
 	}
 }
 
-func (g *googlePubSub) Publish(topiciD string, payload any) string {
-	return ""
+func (g *googlePubSub) Publish(topicId string, payload any) error {
+
+	topic := g.pSub.Topic(topicId + "-" + developmentEnv)
+	if ok, err := topic.Exists(context.Background()); err != nil || !ok {
+		return err
+	}
+
+	p, err := json.Marshal(payload)
+	if err != nil {
+		return err
+	}
+
+	res := topic.Publish(context.Background(), &gPubsub.Message{
+		Data: p,
+	})
+
+	_, err = res.Get(context.Background())
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func (g *googlePubSub) Subscribe(topicId string, payload any) string {
-	return ""
-}
+// func (g *googlePubSub) ValidatePayload(payload any) bool {
+// 	return isPubSubPayloadValid(payload)
+// }
+
+// func isPubSubPayloadValid(payload any) bool {
+// 	return false
+// }
+
+// func (g *googlePubSub) checkIfTopicExists(topicName string) bool {
+
+// 	return false
+// }
+
+// func (g *googlePubSub) Subscribe(topicId string, payload any) string {
+// 	return ""
+// }

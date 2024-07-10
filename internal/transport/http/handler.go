@@ -58,6 +58,12 @@ func (h *Handler) SetupRoutes() {
 	h.Router.Mount("/api", apiRouter)
 	h.Router.Mount("/api/newsletter", newsletterRouter)
 
+	// * Serve static files
+	// fileServer := http.FileServer(http.FS(web.Files))
+	// h.Router.Handle("/assets/*", fileServer)
+	// h.Router.Get("/web", templ.Handler(web.HelloForm()).ServeHTTP)
+	// h.Router.Post("/hello", web.HelloWebHandler)
+
 }
 
 func (h *Handler) Serve() error {

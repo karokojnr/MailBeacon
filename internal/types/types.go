@@ -26,3 +26,8 @@ type User struct {
 	CreatedAt primitive.DateTime `bson:"created_at"`
 	UpdatedAt primitive.DateTime `bson:"updated_at"`
 }
+
+type SendConfirmationEmailRequest struct {
+	Email string `json:"email"`
+	Token string `bson:"token"`
+}
