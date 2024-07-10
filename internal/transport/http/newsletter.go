@@ -34,6 +34,19 @@ func (h *Handler) NewsletterSignup(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJson(w, http.StatusOK, map[string]string{"message": "ok!"})
 }
 func (h *Handler) ConfirmNewsletterSignup(w http.ResponseWriter, r *http.Request) {
+	token := r.URL.Query().Get("token")
+	email := r.URL.Query().Get("email")
+	if token == "" {
+		msg := ""
+		if email == "" {
+			msg = "Invalid email"
+		} else {
+			msg = "Invalid token"
+		}
+		utils.WriteError(w, http.StatusBadRequest, msg)
+		return
+	}
+
 	utils.WriteJson(w, http.StatusOK, map[string]string{"message": "Thank you for confirming your email address!"})
 }
 
@@ -58,6 +71,14 @@ func (h *Handler) SendConfirmationEmail(w http.ResponseWriter, r *http.Request) 
 	parsedPayload := types.SendConfirmationEmailRequest{}
 	if err := json.Unmarshal(decodedBytes, &parsedPayload); err != nil {
 		log.Fatalf("Error parsing JSON from decoded string: %v", err)
+	}
+
+	usr := types.ConvertSendConfirmationEmailRequestToUser(parsedPayload)
+
+	err = h.Service.SendConfirmationEmail(r.Context(), usr)
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, err.Error())
+		return
 	}
 
 	utils.WriteJson(w, http.StatusOK, map[string]string{"message": "Confirmation email sent!"})

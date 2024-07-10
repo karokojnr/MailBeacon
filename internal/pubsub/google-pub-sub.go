@@ -47,20 +47,3 @@ func (g *googlePubSub) Publish(topicId string, payload any) error {
 
 	return nil
 }
-
-// func (g *googlePubSub) ValidatePayload(payload any) bool {
-// 	return isPubSubPayloadValid(payload)
-// }
-
-// func isPubSubPayloadValid(payload any) bool {
-// 	return false
-// }
-
-// func (g *googlePubSub) checkIfTopicExists(topicName string) bool {
-
-// 	return false
-// }
-
-// func (g *googlePubSub) Subscribe(topicId string, payload any) string {
-// 	return ""
-// }

@@ -31,3 +31,11 @@ type SendConfirmationEmailRequest struct {
 	Email string `json:"email"`
 	Token string `bson:"token"`
 }
+
+// SendConfirmationEmailRequest to user
+func ConvertSendConfirmationEmailRequestToUser(sendConfirmationEmailRequest SendConfirmationEmailRequest) User {
+	return User{
+		Email: sendConfirmationEmailRequest.Email,
+		Token: sendConfirmationEmailRequest.Token,
+	}
+}
