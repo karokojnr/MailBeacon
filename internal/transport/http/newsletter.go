@@ -37,7 +37,6 @@ func (h *Handler) ConfirmNewsletterSignup(w http.ResponseWriter, r *http.Request
 	utils.WriteJson(w, http.StatusOK, map[string]string{"message": "Thank you for confirming your email address!"})
 }
 
-
 func (h *Handler) SendConfirmationEmail(w http.ResponseWriter, r *http.Request) {
 	var body struct {
 		Message struct {
@@ -61,10 +60,8 @@ func (h *Handler) SendConfirmationEmail(w http.ResponseWriter, r *http.Request) 
 		log.Fatalf("Error parsing JSON from decoded string: %v", err)
 	}
 
-	log.Printf("sendConfirmEmailHandler: %+v", parsedPayload)
 	utils.WriteJson(w, http.StatusOK, map[string]string{"message": "Confirmation email sent!"})
 }
-
 
 func (h *Handler) SendWelcomeEmail(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJson(w, http.StatusOK, map[string]string{"message": "Welcome email sent!"})
