@@ -55,8 +55,8 @@ func (h *Handler) SetupRoutes() {
 	newsletterRouter.Post("/send-confirmation-email", h.SendConfirmationEmail)
 	newsletterRouter.Post("/send-welcome-email", h.SendWelcomeEmail)
 
-	h.Router.Mount("/api", apiRouter)
-	h.Router.Mount("/api/newsletter", newsletterRouter)
+	h.Router.Mount("/v1/api", apiRouter)
+	h.Router.Mount("/v1/api/newsletter", newsletterRouter)
 
 	// * Serve static files
 	// fileServer := http.FileServer(http.FS(web.Files))

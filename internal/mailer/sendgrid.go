@@ -28,7 +28,7 @@ func NewSendGrid() *sendgridMailer {
 }
 
 func (s *sendgridMailer) SendConfirmationEmail(email string, token string) error {
-	link := fmt.Sprintf("%s/confirm-email?token=%s&email=%s", appUrl, token, email)
+	link := fmt.Sprintf("%s/newsletter/confirm-email?token=%s&email=%s", appUrl, token, email)
 	from := mail.NewEmail("MailBeacon", sendgridSenderEmail)
 	subject := "Confirm your email address"
 	to := mail.NewEmail("", email)
