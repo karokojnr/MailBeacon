@@ -1,8 +1,6 @@
 package types
 
 import (
-	"MailBeacon/internal/utils"
-
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -14,17 +12,6 @@ type User struct {
 	Active    bool               `bson:"active"`
 	CreatedAt primitive.DateTime `bson:"created_at"`
 	UpdatedAt primitive.DateTime `bson:"updated_at"`
-}
-
-type SignUpRequest struct {
-	Email string `json:"email" validate:"required,email"`
-}
-
-func ConvertSignUpRequestToUser(signUpRequest SignUpRequest) User {
-	return User{
-		Email: signUpRequest.Email,
-		Token: utils.GenerateRandomToken(),
-	}
 }
 
 type SendConfirmationEmailRequest struct {

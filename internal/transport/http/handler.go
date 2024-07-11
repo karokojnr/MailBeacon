@@ -1,6 +1,7 @@
 package http
 
 import (
+	"MailBeacon/cmd/web"
 	"MailBeacon/internal/newsletter"
 	"MailBeacon/internal/utils"
 	"context"
@@ -11,6 +12,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/a-h/templ"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	_ "github.com/joho/godotenv/autoload"
@@ -59,10 +61,15 @@ func (h *Handler) SetupRoutes() {
 	h.Router.Mount("/api/v1/newsletter", newsletterRouter)
 
 	// * Serve static files
-	// fileServer := http.FileServer(http.FS(web.Files))
-	// h.Router.Handle("/assets/*", fileServer)
-	// h.Router.Get("/web", templ.Handler(web.HelloForm()).ServeHTTP)
+	fileServer := http.FileServer(http.FS(web.Files))
+	h.Router.Handle("/assets/*", fileServer)
+	// h.Router.Get("/", templ.Handler(web.Newsletter()).ServeHTTP)
 	// h.Router.Post("/hello", web.HelloWebHandler)
+
+	h.Router.Group(func(r chi.Router) {
+		r.Get("/", templ.Handler(web.Base()).ServeHTTP)
+		// r.Post("/hello", templ.Handler(web.HelloPost()).ServeHTTP)
+	})
 
 }
 

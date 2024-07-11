@@ -1,6 +1,7 @@
 package http
 
 import (
+	"MailBeacon/cmd/web"
 	"MailBeacon/internal/types"
 	"MailBeacon/internal/utils"
 	"encoding/base64"
@@ -8,30 +9,27 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/go-playground/validator/v10"
+	"github.com/a-h/templ"
 )
 
 func (h *Handler) NewsletterSignup(w http.ResponseWriter, r *http.Request) {
-	var usrReq types.SignUpRequest
-
-	if err := utils.ReadJson(r, &usrReq); err != nil {
-		utils.WriteError(w, http.StatusBadRequest, "Invalid request body")
+	r.ParseForm()
+	email := r.FormValue("email")
+	if email == "" {
+		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
 
-	validate := validator.New()
-	if err := validate.Struct(usrReq); err != nil {
-		utils.WriteError(w, http.StatusBadRequest, "Invalid request body")
-		return
-	}
-
-	user := types.ConvertSignUpRequestToUser(usrReq)
+	user := types.User{Email: email}
 	err := h.Service.SignUp(r.Context(), user)
 	if err != nil {
-		utils.WriteError(w, http.StatusInternalServerError, err.Error())
+		msg := err.Error()
+		templ.Handler(web.NewsletterSignupError(msg)).Component.Render(r.Context(), w)
 		return
 	}
-	utils.WriteJson(w, http.StatusOK, map[string]string{"message": "ok!"})
+
+	templ.Handler(web.NewsletterSignupSuccess(
+		"Thank you for signing up! Please check your email to confirm your subscription.")).Component.Render(r.Context(), w)
 }
 
 func (h *Handler) SendConfirmationEmail(w http.ResponseWriter, r *http.Request) {

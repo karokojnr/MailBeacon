@@ -23,7 +23,7 @@ func (d *Database) AddUser(ctx context.Context, user types.User) error {
 
 	result := col.FindOne(ctx, bson.M{"email": user.Email})
 	if result.Err() == nil {
-		return errors.New("user already exists")
+		return errors.New("User has already signed up!")
 	}
 
 	_, err := col.InsertOne(ctx, user)
