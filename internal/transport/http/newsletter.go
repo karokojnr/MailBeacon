@@ -8,15 +8,13 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-
-	"github.com/a-h/templ"
 )
 
 func (h *Handler) NewsletterSignup(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	email := r.FormValue("email")
 	if email == "" {
-		http.Error(w, "Bad Request", http.StatusBadRequest)
+		web.SignupError("Invalid email").Render(r.Context(), w)
 		return
 	}
 
@@ -24,12 +22,12 @@ func (h *Handler) NewsletterSignup(w http.ResponseWriter, r *http.Request) {
 	err := h.Service.SignUp(r.Context(), user)
 	if err != nil {
 		msg := err.Error()
-		templ.Handler(web.NewsletterSignupError(msg)).Component.Render(r.Context(), w)
+		web.SignupError(msg).Render(r.Context(), w)
 		return
 	}
 
-	templ.Handler(web.NewsletterSignupSuccess(
-		"Thank you for signing up! Please check your email to confirm your subscription.")).Component.Render(r.Context(), w)
+	web.SignupSuccess("Thank you for signing up! Please check your email to confirm your subscription.").Render(r.Context(), w)
+
 }
 
 func (h *Handler) SendConfirmationEmail(w http.ResponseWriter, r *http.Request) {

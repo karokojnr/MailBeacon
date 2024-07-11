@@ -1,0 +1,46 @@
+package web
+
+templ SignUp() {
+	@Base() {
+		<div class="bg-white text-[#333] font-[sans-serif] mt-28">
+			<div class="max-w-3xl mx-auto text-center">
+				<h3 class="text-4xl font-extrabold">MailBeacon</h3>
+				<p class="text-sm mt-6">
+					Subscribe to our newsletter and stay up to date with the latest news,
+					updates, and exclusive offers. Get valuable insights. Join our community today!
+				</p>
+				<form
+					hx-post="/api/v1/newsletter/signup"
+					hx-indicator="#loader"
+					hx-target="#signup-error"
+					hx-trigger="submit"
+				>
+					<div class="max-w-lg mx-auto bg-gray-100 flex px-2 py-1 rounded-full text-left mt-10 border focus-within:border-gray-700">
+						<input type="email" name="email" required placeholder="Enter your email" class="w-full outline-none rounded-full bg-transparent text-sm px-4 py-3"/>
+						<button
+							class="bg-gray-700 hover:bg-gray-800 transition-all text-white font-semibold text-sm rounded-full px-8 py-3"
+						>Submit</button>
+					</div>
+				</form>
+			</div>
+			<span id="loader" class="htmx-indicator">
+				<img src="assets/img/loader.gif" alt="Loading..." class="m-auto h-10"/>
+			</span>
+			<div id="signup-error" class="font-[sans-serif] my-6"></div>
+		</div>
+	}
+}
+
+templ SignupError(msg string) {
+	<div class="bg-red-100 text-red-800 p-4 rounded-lg" role="alert">
+		<strong class="font-bold text-sm mr-4">Error!</strong>
+		<span class="block text-sm sm:inline max-sm:mt-2">{ msg }</span>
+	</div>
+}
+
+templ SignupSuccess(msg string) {
+	<div class="bg-green-100 text-green-800 p-4 rounded-lg" role="alert">
+		<strong class="font-bold text-sm mr-4">Success!</strong>
+		<span class="block text-sm sm:inline max-sm:mt-2">{ msg }</span>
+	</div>
+}

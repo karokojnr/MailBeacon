@@ -67,7 +67,7 @@ func (h *Handler) SetupRoutes() {
 	// h.Router.Post("/hello", web.HelloWebHandler)
 
 	h.Router.Group(func(r chi.Router) {
-		r.Get("/", templ.Handler(web.Base()).ServeHTTP)
+		r.Get("/", templ.Handler(web.SignUp()).ServeHTTP)
 		// r.Post("/hello", templ.Handler(web.HelloPost()).ServeHTTP)
 	})
 
