@@ -1,0 +1,23 @@
+package web
+
+templ SignupConfirmation() {
+	@Base() {
+		<div class="bg-white text-[#333] font-[sans-serif] mt-28">
+			<div class="max-w-3xl mx-auto text-center">
+				<h3 class="text-4xl font-extrabold">MailBeacon</h3>
+				<p class="text-sm mt-6">
+					You have successfully subscribed to our newsletter. Thank you for joining our community<span>🎉</span>!
+				</p>
+			</div>
+		</div>
+	}
+}
+
+templ SignupConfirmationError(msg string) {
+	@Base() {
+		<div class="bg-red-100 text-red-800 p-4 rounded-lg" role="alert">
+			<strong class="font-bold text-sm mr-4">Error!</strong>
+			<span class="block text-sm sm:inline max-sm:mt-2">{ msg }</span>
+		</div>
+	}
+}

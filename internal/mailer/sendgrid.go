@@ -48,5 +48,20 @@ func (s *sendgridMailer) SendConfirmationEmail(email string, token string) error
 }
 
 func (s *sendgridMailer) SendWelcomeEmail(email string) error {
+	from := mail.NewEmail("MailBeacon", sendgridSenderEmail)
+	subject := "Welcome to MailBeacon!"
+	to := mail.NewEmail("", email)
+	plainTextContent := "Welcome to MailBeacon!"
+	htmlContent := fmt.Sprintf(`Welcome to MailBeacon!🎉 We’re thrilled to have you on board.`)
+	message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
+	response, err := s.sendgridClient.Send(message)
+	if err != nil {
+		log.Printf("Failed to send email: %v", err)
+		return err
+	} else {
+		fmt.Println(response.StatusCode)
+		fmt.Println(response.Body)
+		fmt.Println(response.Headers)
+	}
 	return nil
 }

@@ -52,7 +52,7 @@ func (h *Handler) SetupRoutes() {
 
 	newsletterRouter := chi.NewRouter()
 	newsletterRouter.Post("/signup", h.NewsletterSignup)
-	newsletterRouter.Post("/confirm-email", h.ConfirmNewsletterSignup)
+	newsletterRouter.Get("/confirm-email", h.ConfirmNewsletterSignup)
 
 	newsletterRouter.Post("/send-confirmation-email", h.SendConfirmationEmail)
 	newsletterRouter.Post("/send-welcome-email", h.SendWelcomeEmail)

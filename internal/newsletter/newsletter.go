@@ -56,7 +56,7 @@ func (n *newsletterService) ConfirmSubscription(ctx context.Context, user types.
 		return err
 	}
 
-	err = n.pubSub.Publish("newsletter-confirmation", user)
+	err = n.pubSub.Publish("newsletter-email-confirmed", user)
 	if err != nil {
 		return err
 	}

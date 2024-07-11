@@ -18,7 +18,8 @@ func (h *Handler) NewsletterSignup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := types.User{Email: email}
+	tkn := utils.GenerateRandomToken()
+	user := types.User{Email: email, Token: tkn}
 	err := h.Service.SignUp(r.Context(), user)
 	if err != nil {
 		msg := err.Error()
@@ -77,7 +78,7 @@ func (h *Handler) ConfirmNewsletterSignup(w http.ResponseWriter, r *http.Request
 		} else {
 			msg = "Invalid token"
 		}
-		utils.WriteError(w, http.StatusBadRequest, msg)
+		web.SignupConfirmationError(msg).Render(r.Context(), w)
 		return
 	}
 
@@ -88,12 +89,11 @@ func (h *Handler) ConfirmNewsletterSignup(w http.ResponseWriter, r *http.Request
 
 	err := h.Service.ConfirmSubscription(r.Context(), usr)
 	if err != nil {
-		utils.WriteError(w, http.StatusInternalServerError, err.Error())
+		web.SignupConfirmationError(err.Error()).Render(r.Context(), w)
 		return
 
 	}
-
-	utils.WriteJson(w, http.StatusOK, map[string]string{"message": "Thank you for confirming your email address!"})
+	web.SignupConfirmation().Render(r.Context(), w)
 }
 
 func (h *Handler) SendWelcomeEmail(w http.ResponseWriter, r *http.Request) {
@@ -119,6 +119,7 @@ func (h *Handler) SendWelcomeEmail(w http.ResponseWriter, r *http.Request) {
 		utils.WriteError(w, http.StatusBadRequest, "Invalid request body")
 		return
 	}
+	log.Printf("Decoded welcome email payload: %v", parsedPayload)
 
 	usr := types.ConvertSendWelcomeEmailRequestToUser(parsedPayload)
 
