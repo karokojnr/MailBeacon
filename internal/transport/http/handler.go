@@ -52,7 +52,6 @@ func (h *Handler) SetupRoutes() {
 
 	newsletterRouter := chi.NewRouter()
 	newsletterRouter.Post("/signup", h.NewsletterSignup)
-	newsletterRouter.Get("/confirm-email", h.ConfirmNewsletterSignup)
 
 	newsletterRouter.Post("/send-confirmation-email", h.SendConfirmationEmail)
 	newsletterRouter.Post("/send-welcome-email", h.SendWelcomeEmail)
@@ -60,15 +59,12 @@ func (h *Handler) SetupRoutes() {
 	h.Router.Mount("/api/v1", apiRouter)
 	h.Router.Mount("/api/v1/newsletter", newsletterRouter)
 
-	// * Serve static files
 	fileServer := http.FileServer(http.FS(web.Files))
 	h.Router.Handle("/assets/*", fileServer)
-	// h.Router.Get("/", templ.Handler(web.Newsletter()).ServeHTTP)
-	// h.Router.Post("/hello", web.HelloWebHandler)
 
 	h.Router.Group(func(r chi.Router) {
 		r.Get("/", templ.Handler(web.SignUp()).ServeHTTP)
-		// r.Post("/hello", templ.Handler(web.HelloPost()).ServeHTTP)
+		r.Get("/confirm-email", h.ConfirmNewsletterSignup)
 	})
 
 }

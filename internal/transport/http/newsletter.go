@@ -119,7 +119,6 @@ func (h *Handler) SendWelcomeEmail(w http.ResponseWriter, r *http.Request) {
 		utils.WriteError(w, http.StatusBadRequest, "Invalid request body")
 		return
 	}
-	log.Printf("Decoded welcome email payload: %v", parsedPayload)
 
 	usr := types.ConvertSendWelcomeEmailRequestToUser(parsedPayload)
 
