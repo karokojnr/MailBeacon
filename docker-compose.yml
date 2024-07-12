@@ -1,18 +1,6 @@
 version: "3.8"
 
 services:
-  app:
-    build: .
-    ports:
-      - "4000:4000"
-    environment:
-      DB_USERNAME: ${DB_USERNAME}
-      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      DB_PORT: ${DB_PORT}
-    depends_on:
-      - mongo
-    links:
-      - mongo
   mongo:
     image: mongo:latest
     restart: always
@@ -34,6 +22,25 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: ${DB_ROOT_PASSWORD}
       ME_CONFIG_MONGODB_URL: mongodb://${DB_USERNAME}:${DB_ROOT_PASSWORD}@mongo:27017/
       ME_CONFIG_BASICAUTH: false
-
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      DB_USERNAME: ${DB_USERNAME}
+      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      DB_PORT: ${DB_PORT}
+      DB_ADDR: ${DB_ADDR}
+      PORT: ${PORT}
+      APP_ENV: ${APP_ENV}
+      PROJECT_ID: ${PROJECT_ID}
+      DEVELOPMENT_ENV: ${DEVELOPMENT_ENV}
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY}
+      APP_URL: ${APP_URL}
+      SENDGRID_SENDER_EMAIL: ${SENDGRID_SENDER_EMAIL}
+    depends_on:
+      - mongo
+    links:
+      - mongo
 volumes:
   mongo_volume:
