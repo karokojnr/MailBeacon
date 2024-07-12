@@ -12,9 +12,6 @@ import (
 )
 
 var (
-	user  = os.Getenv("DB_USERNAME")
-	pass  = os.Getenv("DB_ROOT_PASSWORD")
-	addr  = os.Getenv("DB_ADDR")
 	dbUrl = os.Getenv("DB_URL")
 )
 
@@ -32,13 +29,15 @@ func NewDatabase() (*Database, error) {
 		return nil, err
 	}
 
-	err = client.Ping(ctx, nil)
-	if err != nil {
-		log.Printf("Error pinging database: %v", err)
-		return nil, err
-	} else {
-		log.Println("Connected to database")
-	}
+	// err = client.Ping(ctx, nil)
+	// if err != nil {
+	// 	log.Printf("Error pinging database: %v", err)
+	// 	return nil, err
+	// } else {
+	// 	log.Println("Connected to database")
+	// }
+
+	log.Println("Connected to database...")
 
 	return &Database{
 		db: client,
