@@ -1,6 +1,18 @@
 version: "3.8"
 
 services:
+  app:
+    build: .
+    ports:
+      - "4000:4000"
+    environment:
+      DB_USERNAME: ${DB_USERNAME}
+      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      DB_PORT: ${DB_PORT}
+    depends_on:
+      - mongo
+    links:
+      - mongo
   mongo:
     image: mongo:latest
     restart: always

@@ -1,0 +1,36 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "europe-west1-docker.pkg.dev/$PROJECT_ID/${_SERVICE_NAME}/mailbeacon",
+        "${_PATH}",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "europe-west1-docker.pkg.dev/$PROJECT_ID/${_SERVICE_NAME}/mailbeacon",
+      ]
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        "run",
+        "deploy",
+        "mailbeacon",
+        "--image",
+        "europe-west1-docker.pkg.dev/$PROJECT_ID/${_SERVICE_NAME}/mailbeacon",
+        "--region",
+        "europe-west1",
+        "--platform",
+        "managed",
+        "--allow-unauthenticated",
+      ]
+
+substitutions:
+  _SERVICE_NAME: mailbeacon
+  _PATH: .
+
+images:
+  - "europe-west1-docker.pkg.dev/$PROJECT_ID/${_SERVICE_NAME}/mailbeacon"
