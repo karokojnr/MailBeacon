@@ -7,7 +7,7 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o /api /app/cmd/api/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o /api cmd/api/main.go
 FROM scratch AS production-stage
 WORKDIR /app
 

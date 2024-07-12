@@ -22,8 +22,9 @@ type Database struct {
 func NewDatabase() (*Database, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
-
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(dbUrl))
+	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
+	opts := options.Client().ApplyURI(dbUrl).SetServerAPIOptions(serverAPI)
+	client, err := mongo.Connect(ctx, opts)
 	if err != nil {
 		log.Printf("Error connecting to database: %v", err)
 		return nil, err
