@@ -34,11 +34,13 @@ func NewNewsletterService(store database.NewsletterStore, pubSub pubsub.PubSub, 
 func (n *newsletterService) SignUp(ctx context.Context, user types.User) error {
 	err := n.store.AddUser(ctx, user)
 	if err != nil {
+		log.Println("Error adding user to database: ", err)
 		return err
 	}
 
 	err = n.pubSub.Publish("newsletter-signup", user)
 	if err != nil {
+		log.Println("Error publishing newsletter signup event: ", err)
 		return err
 	}
 	return nil
