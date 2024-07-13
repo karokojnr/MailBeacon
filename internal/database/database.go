@@ -2,7 +2,7 @@ package database
 
 import (
 	"context"
-	"log"
+	"fmt"
 	"os"
 	"time"
 
@@ -20,25 +20,30 @@ type Database struct {
 }
 
 func NewDatabase() (*Database, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
-	opts := options.Client().ApplyURI(dbUrl).SetServerAPIOptions(serverAPI)
-	client, err := mongo.Connect(ctx, opts)
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(
+		dbUrl,
+	))
+
 	if err != nil {
-		log.Printf("Error connecting to database: %v", err)
-		return nil, err
+		fmt.Println("Error connecting to the database")
+		panic(err)
 	}
+	// defer func() {
+	// 	if err = client.Disconnect(ctx); err != nil {
+	// 		panic(err)
+	// 	}
+	// }()
 
 	err = client.Ping(ctx, nil)
+
 	if err != nil {
-		log.Printf("Error pinging database: %v", err)
-		// return nil, err
-	} else {
-		log.Println("Connected to database")
+		fmt.Println("Error connecting to the database")
+		panic(err)
 	}
 
-	log.Println("Connected to database...")
+	fmt.Println("Connected to the database!")
 
 	return &Database{
 		db: client,
