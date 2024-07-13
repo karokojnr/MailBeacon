@@ -6,6 +6,8 @@ import (
 	"MailBeacon/internal/pubsub"
 	"MailBeacon/internal/types"
 	"context"
+	"errors"
+	"log"
 )
 
 type NewsletterSevice interface {
@@ -45,7 +47,8 @@ func (n *newsletterService) SignUp(ctx context.Context, user types.User) error {
 func (n *newsletterService) SendConfirmationEmail(ctx context.Context, user types.User) error {
 	err := n.mailer.SendConfirmationEmail(user.Email, user.Token)
 	if err != nil {
-		return err
+		log.Println("Error sending confirmation email: ", err)
+		return errors.New("error sending confirmation email. Please try again later")
 	}
 	return nil
 }
