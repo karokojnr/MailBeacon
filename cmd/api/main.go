@@ -13,13 +13,15 @@ import (
 	transportHTTP "MailBeacon/internal/transport/http"
 
 	googlePubSub "cloud.google.com/go/pubsub"
+	"google.golang.org/api/option"
 
 	_ "github.com/joho/godotenv/autoload"
 )
 
 var (
-	projectId      = os.Getenv("PROJECT_ID")
-	sendgridApiKey = os.Getenv("SENDGRID_API_KEY")
+	projectId             = os.Getenv("PROJECT_ID")
+	sendgridApiKey        = os.Getenv("SENDGRID_API_KEY")
+	goolgleAppCredentials = os.Getenv("GOOGLE_APPLICATION_CREDENTIALS")
 )
 
 func Run() error {
@@ -31,7 +33,7 @@ func Run() error {
 	}
 
 	// Create a new pubsub client
-	client, err := googlePubSub.NewClient(context.Background(), projectId)
+	client, err := googlePubSub.NewClient(context.Background(), projectId, option.WithCredentialsFile(goolgleAppCredentials))
 	if err != nil {
 		log.Fatalf("Failed to create pubsub client: %v", err)
 	}
