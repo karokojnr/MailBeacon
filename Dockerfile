@@ -16,6 +16,7 @@ RUN go install github.com/a-h/templ/cmd/templ@latest &&\
 FROM alpine:latest as run
 
 WORKDIR /app
+
 COPY --from=build /app/main ./run
 
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
