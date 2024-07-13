@@ -8,7 +8,7 @@ RUN go mod download
 COPY . .
 
 RUN go install github.com/a-h/templ/cmd/templ@latest &&\
-    apk add make npm nodejs &&\
+    apk add --no-cache make npm nodejs ca-certificates &&\
     make
 
 
@@ -18,7 +18,7 @@ FROM alpine:latest as run
 WORKDIR /app
 COPY --from=build /app/main ./run
 
-RUN apk add --no-cache ca-certificates
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 EXPOSE 8080
 
