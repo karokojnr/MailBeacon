@@ -1,9 +1,9 @@
 package http
 
 import (
+	"MailBeacon/cmd/web"
 	"MailBeacon/internal/newsletter"
 	"MailBeacon/internal/utils"
-	"MailBeacon/internal/web"
 	"context"
 	"log"
 	"net/http"

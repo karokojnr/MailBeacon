@@ -1,9 +1,9 @@
 package http
 
 import (
+	"MailBeacon/cmd/web"
 	"MailBeacon/internal/types"
 	"MailBeacon/internal/utils"
-	"MailBeacon/internal/web"
 	"encoding/base64"
 	"encoding/json"
 	"log"
