@@ -268,3 +268,62 @@ func TestConfirmNewsletterSignup(t *testing.T) {
 		})
 	}
 }
+
+func TestSendWelcomeEmail(t *testing.T) {
+	mockService := new(MockService)
+	handler := transportHTTP.Handler{Service: mockService}
+
+	// encodedEmail := base64.StdEncoding.EncodeToString([]byte("test@example.com"))
+
+	tsts := []struct {
+		name           string
+		payload        string
+		mockServiceErr error
+		expectedStatus int
+		expectedBody   string
+	}{
+		{
+			name:           "valid payload",
+			payload:        `{"message": {"data": "eyJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20ifQ=="}}`,
+			mockServiceErr: nil,
+			expectedStatus: http.StatusOK,
+			expectedBody:   "Welcome email sent!",
+		},
+	}
+
+	for _, tc := range tsts {
+		t.Run(tc.name, func(t *testing.T) {
+			body := bytes.NewBufferString(tc.payload)
+			req := httptest.NewRequest("POST", "/api/v1/newsletter/send-welcome-email", body)
+			req.Header.Set("Content-Type", "application/json")
+			w := httptest.NewRecorder()
+
+			if tc.payload != "" {
+
+				parsedPayload := types.SendWelcomeEmailRequest{}
+				json.Unmarshal([]byte(tc.payload), &parsedPayload)
+				user := types.ConvertSendWelcomeEmailRequestToUser(parsedPayload)
+				user.Email = "test@example.com"
+				mockService.On("SendWelcomeEmail", mock.Anything, user).Return(tc.mockServiceErr)
+			}
+
+			handler.SendWelcomeEmail(w, req)
+
+			res := w.Result()
+			defer res.Body.Close()
+
+			assert.Equal(t, tc.expectedStatus, res.StatusCode)
+			if tc.expectedBody != "" {
+				buffer := new(bytes.Buffer)
+				buffer.ReadFrom(res.Body)
+				bodyString := buffer.String()
+				assert.Contains(t, bodyString, tc.expectedBody)
+			}
+
+			mockService.AssertExpectations(t)
+
+		})
+
+	}
+
+}
