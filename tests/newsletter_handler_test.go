@@ -218,3 +218,53 @@ func TestSendConfirmationEmail(t *testing.T) {
 		})
 	}
 }
+
+func TestConfirmNewsletterSignup(t *testing.T) {
+	mockService := new(MockService)
+	handler := transportHTTP.Handler{Service: mockService}
+
+	tests := []struct {
+		name           string
+		token          string
+		email          string
+		mockServiceErr error
+		expectedStatus int
+		expectedBody   string
+	}{
+		{
+			name:           "valid token and email",
+			token:          token,
+			email:          "test@example.com",
+			mockServiceErr: nil,
+			expectedStatus: http.StatusOK,
+			expectedBody:   "You have successfully confirmed your email.",
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			req := httptest.NewRequest("GET", "/confirm-email?token="+tc.token+"&email="+tc.email, nil)
+			w := httptest.NewRecorder()
+
+			if tc.token != "" && tc.email != "" {
+				user := types.User{Email: tc.email, Token: tc.token}
+				mockService.On("ConfirmSubscription", mock.Anything, user).Return(tc.mockServiceErr)
+			}
+
+			handler.ConfirmNewsletterSignup(w, req)
+
+			res := w.Result()
+			defer res.Body.Close()
+
+			assert.Equal(t, tc.expectedStatus, res.StatusCode)
+			if tc.expectedBody != "" {
+				buffer := new(bytes.Buffer)
+				buffer.ReadFrom(res.Body)
+				bodyString := buffer.String()
+				assert.Contains(t, bodyString, tc.expectedBody)
+			}
+
+			mockService.AssertExpectations(t)
+		})
+	}
+}
