@@ -273,8 +273,6 @@ func TestSendWelcomeEmail(t *testing.T) {
 	mockService := new(MockService)
 	handler := transportHTTP.Handler{Service: mockService}
 
-	// encodedEmail := base64.StdEncoding.EncodeToString([]byte("test@example.com"))
-
 	tsts := []struct {
 		name           string
 		payload        string

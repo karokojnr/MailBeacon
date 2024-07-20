@@ -1,4 +1,4 @@
-# MailBeacon ![Static Badge](https://img.shields.io/badge/workinprogress-%F0%9F%9A%A7-brightgreen)
+# MailBeacon
 
 A Newsletter service using GO and Google Pub/Sub.
 
