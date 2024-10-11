@@ -17,6 +17,8 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
+const version = "0.0.1"
+
 var (
 	projectId = os.Getenv("PROJECT_ID")
 )
@@ -45,7 +47,7 @@ func Run() error {
 
 	// Create a new http handler
 	httpHandler := transportHTTP.NewHandler(newsletterService)
-	log.Printf("Server is running on: %v", httpHandler.Server.Addr)
+	log.Printf("Server is running on: %v, version: %v", httpHandler.Server.Addr, version)
 	if err := httpHandler.Serve(); err != nil {
 		return err
 	}
