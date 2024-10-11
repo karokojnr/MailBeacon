@@ -27,4 +27,4 @@ tmp/
 
 # Project build
 main
-*templ.go
+# *templ.go
