@@ -17,7 +17,7 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
-const version = ""
+const version = "1.1.0"
 
 var (
 	projectId = os.Getenv("PROJECT_ID")
