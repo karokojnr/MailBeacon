@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/karokojnr/MailBeacon/compare/v1.0.0...v1.1.0) (2024-10-11)
+
+
+### Features
+
+* update api version :rocket: ([c5082a9](https://github.com/karokojnr/MailBeacon/commit/c5082a9a35b597517b7da6929b0d94e2485a2ee9))
+
 ## 1.0.0 (2024-10-11)
 
 
