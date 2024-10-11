@@ -10,7 +10,6 @@ import (
 )
 
 var (
-	projectId      = os.Getenv("PROJECT_ID")
 	developmentEnv = os.Getenv("DEVELOPMENT_ENV")
 )
 

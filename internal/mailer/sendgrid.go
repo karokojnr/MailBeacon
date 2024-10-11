@@ -48,7 +48,7 @@ func (s *sendgridMailer) SendWelcomeEmail(email string) error {
 	subject := "Welcome to MailBeacon!"
 	to := mail.NewEmail("", email)
 	plainTextContent := "Welcome to MailBeacon!"
-	htmlContent := fmt.Sprintf(`Welcome to MailBeacon!🎉 We’re thrilled to have you on board.`)
+	htmlContent := `Welcome to MailBeacon!🎉 We’re thrilled to have you on board.`
 	message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
 	response, err := s.sendgridClient.Send(message)
 	if err != nil {

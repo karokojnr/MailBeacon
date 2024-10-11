@@ -18,8 +18,7 @@ import (
 )
 
 var (
-	projectId      = os.Getenv("PROJECT_ID")
-	sendgridApiKey = os.Getenv("SENDGRID_API_KEY")
+	projectId = os.Getenv("PROJECT_ID")
 )
 
 func Run() error {
