@@ -1,6 +1,6 @@
 # MailBeacon
 
-A Newsletter service using GO and Google Pub/Sub.
+A reusable newsletter service using GO and Google Pub/Sub.
 
 ![alt text](/mailbeacon.png)
 
